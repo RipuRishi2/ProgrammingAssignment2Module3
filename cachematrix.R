@@ -5,12 +5,17 @@
 
 # makeCacheMatrix: Creates a special "matrix" object that can cache its inverse.
 makeCacheMatrix <- function(x = matrix()) {
-  inv <- NULL  # Initialize the inverse property to NULL
+ # Initialize the inverse property to NULL
+  inv <- NULL  
   
   # Method to set the matrix
   set <- function(y) {
-    x <<- y       # Assign new matrix to x in parent environment
-    inv <<- NULL  # Reset the inverse cache when the matrix is reset
+
+    # Assign new matrix to x in parent environment
+    x <<- y       
+    
+    # Reset the inverse cache when the matrix is reset
+    inv <<- NULL  
   }
   
   # Method to get the matrix
@@ -29,21 +34,36 @@ makeCacheMatrix <- function(x = matrix()) {
        getinverse = getinverse)
 }
 
-# cacheSolve: Computes the inverse of the special "matrix" returned by makeCacheMatrix.
+# cacheSolve: Computes the inverse of the square "matrix" ONLY returned by makeCacheMatrix.
 # If the inverse has already been calculated (and the matrix has not changed),
 # then it retrieves the inverse from the cache.
+# If the input matrix is NOT square, error message is provided.
+
 cacheSolve <- function(x, ...) {
   inv <- x$getinverse()  # Try to get the cached inverse
   
   # If the inverse is already cached, return it with a message
   if (!is.null(inv)) {
-    message("getting cached data")
+    message("Please wait ... fetching cached data")
     return(inv)
   }
   
-  # Otherwise, compute the inverse
-  data <- x$get()            # Get the matrix from the object
-  inv <- solve(data, ...)    # Compute the inverse using solve()
-  x$setinverse(inv)          # Cache the inverse for future use
-  inv                        # Return the inverse
+  # Section for computing the inverse
+
+  # Get the matrix from the object
+  data <- x$get()            
+  
+  # Checking if the input matrix is square before attempting inversion
+  if (nrow(data) != ncol(data)) {
+    stop("Cannot invertas the input Matrix is not square.")
+  }  
+
+  # Compute the inverse using solve()
+  inv <- solve(data, ...)    
+
+  # Cache the inverse for future use
+  x$setinverse(inv)          
+
+  # Return the inverse
+  inv                        
 }
