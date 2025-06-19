@@ -6,7 +6,7 @@
 # makeCacheMatrix: Creates a special "matrix" object that can cache its inverse.
 makeCacheMatrix <- function(x = matrix()) {
  # Initialize the inverse property to NULL
-  inv <- NULL  
+  inv1 <- NULL  
   
   # Method to set the matrix
   set <- function(y) {
@@ -15,17 +15,17 @@ makeCacheMatrix <- function(x = matrix()) {
     x <<- y       
     
     # Reset the inverse cache when the matrix is reset
-    inv <<- NULL  
+    inv1 <<- NULL  
   }
   
   # Method to get the matrix
   get <- function() x
   
   # Method to set the inverse of the matrix
-  setinverse <- function(inverse) inv <<- inverse
+  setinverse <- function(inverse) inv1 <<- inverse
   
   # Method to get the inverse of the matrix
-  getinverse <- function() inv
+  getinverse <- function() inv1
   
   # Return a list of the above methods
   list(set = set,
@@ -40,12 +40,12 @@ makeCacheMatrix <- function(x = matrix()) {
 # If the input matrix is NOT square, error message is provided.
 
 cacheSolve <- function(x, ...) {
-  inv <- x$getinverse()  # Try to get the cached inverse
+  inv1 <- x$getinverse()  # Try to get the cached inverse
   
   # If the inverse is already cached, return it with a message
-  if (!is.null(inv)) {
+  if (!is.null(inv1)) {
     message("Please wait ... fetching cached data")
-    return(inv)
+    return(inv1)
   }
   
   # Section for computing the inverse
@@ -55,15 +55,15 @@ cacheSolve <- function(x, ...) {
   
   # Checking if the input matrix is square before attempting inversion
   if (nrow(data) != ncol(data)) {
-    stop("Cannot invertas the input Matrix is not square.")
+    stop("Cannot invert the matrix as it is not a square matrix. Please try again.")
   }  
 
   # Compute the inverse using solve()
-  inv <- solve(data, ...)    
+  inv1 <- solve(data, ...)    
 
   # Cache the inverse for future use
-  x$setinverse(inv)          
+  x$setinverse(inv1)          
 
   # Return the inverse
-  inv                        
+  inv1                       
 }
